@@ -1,0 +1,127 @@
+name: common/pull-request CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  dco:
+    name: "DCO"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Check commit signoffs
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const commits = await github.paginate(github.rest.pulls.listCommits, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            });
+
+            const missing = commits.filter(({ commit }) => !/^Signed-off-by:\s.+$/im.test(commit.message));
+
+            for (const { sha } of missing) {
+              core.error(`Commit ${sha} is missing a Signed-off-by line`);
+            }
+
+            if (missing.length > 0) {
+              core.setFailed(`${missing.length} commit(s) missing DCO signoff`);
+            }
+
+  restyled:
+    name: "Restyled"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: Restyled-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Ensure fork is public
+        if: ${{ github.event.pull_request.head.repo.private }}
+        run: |
+          echo "Private forks are not supported for restyling" >&2
+          exit 1
+
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: restyled-io/actions/setup@v4
+
+      - id: restyler
+        uses: restyled-io/actions/run@v4
+        with:
+          fail-on-differences: true
+
+  build:
+    name: "${{ matrix.name }}"
+    needs: [dco, restyled]
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-${{ matrix.name }}
+      cancel-in-progress: true
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/gnuradio4-library-sdk:${{ matrix.library_sdk_tag }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Ubuntu 24.04 | gcc-14 | Release"
+            library_sdk_tag: main-ubuntu-24.04-gcc14-release
+            cc: gcc-14
+            cxx: g++-14
+            cmake-build-type: Release
+            extra_cmake_flags: ""
+          - name: "Ubuntu 26.04 | gcc | Release"
+            library_sdk_tag: main-ubuntu-26.04-gcc-release
+            cc: gcc
+            cxx: g++
+            cmake-build-type: Release
+            extra_cmake_flags: ""
+          - name: "Fedora 44 | clang | Debug"
+            library_sdk_tag: main-fedora-44-clang-debug
+            cc: clang
+            cxx: clang++
+            cmake-build-type: Debug
+            extra_cmake_flags: "-DCMAKE_CXX_FLAGS=-fsanitize=address -DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address -DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address"
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure
+        shell: bash
+        env:
+          CC: "${{ matrix.cc }}"
+          CXX: "${{ matrix.cxx }}"
+        run: |
+          extra_cmake_flags=(${{ matrix.extra_cmake_flags }})
+          cmake -S . -B ../build \
+            -DCMAKE_COLOR_DIAGNOSTICS=ON \
+            -DDISABLE_EXTERNAL_DEPS_WARNINGS=ON \
+            -DCMAKE_PREFIX_PATH=/opt/gnuradio4 \
+            -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+            -DENABLE_TESTING=ON \
+            "${extra_cmake_flags[@]}"
+
+      - name: Build
+        shell: bash
+        run: cmake --build ../build
+
+      - name: Execute tests
+        env:
+          DISABLE_SENSITIVE_TESTS: 1
+        working-directory: ${{ runner.workspace }}/build
+        shell: bash
+        run: ctest --output-on-failure

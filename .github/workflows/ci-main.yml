@@ -1,0 +1,92 @@
+name: main branch CI
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  build:
+    name: "${{ matrix.name }}"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.run_id }}-${{ matrix.name }}
+      cancel-in-progress: false
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/gnuradio4-library-sdk:${{ matrix.library_sdk_tag }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Ubuntu 24.04 | gcc-14 | Release"
+            library_sdk_tag: main-ubuntu-24.04-gcc14-release
+            cc: gcc-14
+            cxx: g++-14
+            cmake-build-type: Release
+            extra_cmake_flags: ""
+          - name: "Ubuntu 26.04 | gcc | Release"
+            library_sdk_tag: main-ubuntu-26.04-gcc-release
+            cc: gcc
+            cxx: g++
+            cmake-build-type: Release
+            extra_cmake_flags: ""
+          - name: "Ubuntu 26.04 | gcc | Debug"
+            library_sdk_tag: main-ubuntu-26.04-gcc-debug
+            cc: gcc
+            cxx: g++
+            cmake-build-type: Debug
+            extra_cmake_flags: ""
+          - name: "Ubuntu 24.04 | clang-20 | Release"
+            library_sdk_tag: main-ubuntu-24.04-clang20-release
+            cc: clang-20
+            cxx: clang++-20
+            cmake-build-type: Release
+            extra_cmake_flags: "-DCMAKE_CXX_FLAGS=-fsanitize=address -DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address -DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address"
+          - name: "Fedora 44 | clang | Release"
+            library_sdk_tag: main-fedora-44-clang-release
+            cc: clang
+            cxx: clang++
+            cmake-build-type: Release
+            extra_cmake_flags: "-DCMAKE_CXX_FLAGS=-fsanitize=address -DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address -DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address"
+          - name: "Fedora 44 | clang | Debug"
+            library_sdk_tag: main-fedora-44-clang-debug
+            cc: clang
+            cxx: clang++
+            cmake-build-type: Debug
+            extra_cmake_flags: "-DCMAKE_CXX_FLAGS=-fsanitize=address -DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address -DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address"
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure
+        shell: bash
+        env:
+          CC: "${{ matrix.cc }}"
+          CXX: "${{ matrix.cxx }}"
+        run: |
+          extra_cmake_flags=(${{ matrix.extra_cmake_flags }})
+          cmake -S . -B ../build \
+            -DCMAKE_COLOR_DIAGNOSTICS=ON \
+            -DDISABLE_EXTERNAL_DEPS_WARNINGS=ON \
+            -DCMAKE_PREFIX_PATH=/opt/gnuradio4 \
+            -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+            -DENABLE_TESTING=ON \
+            "${extra_cmake_flags[@]}"
+
+      - name: Build
+        shell: bash
+        run: cmake --build ../build
+
+      - name: Execute tests
+        env:
+          DISABLE_SENSITIVE_TESTS: 1
+        working-directory: ${{ runner.workspace }}/build
+        shell: bash
+        run: ctest --output-on-failure
