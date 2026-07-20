@@ -14,16 +14,14 @@ int main() {
     auto known = gr::globalBlockRegistry().keys();
     std::ranges::sort(known);
     std::vector<std::string> desired{
-        "gr::basic::DataSink<float32>"s,          //
-        "gr::basic::DataSink<float64>"s,          //
-        "gr::basic::DataSetSink<float32>"s,       //
-        "gr::basic::DataSetSink<float64>"s,       //
-        "gr::basic::FunctionGenerator<float32>"s, //
-        "gr::basic::FunctionGenerator<float64>"s, //
-        "gr::basic::Selector<float32>"s,          //
-        "gr::basic::Selector<float64>"s,          //
-        "gr::basic::SignalGenerator<float32>"s,   //
-        "gr::basic::SignalGenerator<float64>"s    //
+        "gr::basic::DataSink<float32>"s,                //
+        "gr::basic::DataSetSink<float32>"s,             //
+        "gr::basic::FunctionGenerator<int16>"s,         //
+        "gr::basic::FunctionGenerator<float32>"s,       //
+        "gr::basic::Selector<int32>"s,                  //
+        "gr::basic::Selector<float32>"s,                //
+        "gr::basic::SignalGenerator<float32>"s,         //
+        "gr::basic::SignalGenerator<complex<float32>>"s //
     };
     std::ranges::sort(desired);
 

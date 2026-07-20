@@ -9,7 +9,7 @@ namespace gr::filter {
 
 using namespace gr;
 
-GR_REGISTER_BLOCK(gr::filter::SvdDenoiser, [T], [ float, double, std::complex<float>, std::complex<double> ])
+GR_REGISTER_BLOCK(gr::filter::SvdDenoiser, [T], [ float, std::complex<float> ])
 
 template<typename T>
 struct SvdDenoiser : Block<SvdDenoiser<T>> {

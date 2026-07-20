@@ -13,7 +13,7 @@
 
 namespace gr::math {
 
-GR_REGISTER_BLOCK(gr::math::Rotator, [T], [ std::complex<float>, std::complex<double> ])
+GR_REGISTER_BLOCK(gr::math::Rotator, [T], [std::complex<float>])
 
 template<gr::meta::complex_like T>
 struct Rotator : gr::Block<Rotator<T>> {

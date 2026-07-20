@@ -22,8 +22,8 @@
 
 namespace gr::filter {
 
-GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorTimeDomain", gr::filter::FrequencyEstimatorTimeDomain, [T], [ float, double ])
-GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorTimeDomainDecimating", gr::filter::FrequencyEstimatorTimeDomain, ([T], gr::Resampling<10U>), [ float, double ])
+GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorTimeDomain", gr::filter::FrequencyEstimatorTimeDomain, [T], [float])
+GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorTimeDomainDecimating", gr::filter::FrequencyEstimatorTimeDomain, ([T], gr::Resampling<10U>), [float])
 
 template<typename T, typename... Args>
 requires std::floating_point<T>
@@ -178,8 +178,8 @@ private:
 template<typename T>
 using FrequencyEstimatorTimeDomainDecimating = FrequencyEstimatorTimeDomain<T, Resampling<10U>>;
 
-GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorFrequencyDomain", gr::filter::FrequencyEstimatorFrequencyDomain, [T], [ float, double ])
-GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorFrequencyDomainDecimating", gr::filter::FrequencyEstimatorFrequencyDomain, ([T], gr::Resampling<10U>), [ float, double ])
+GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorFrequencyDomain", gr::filter::FrequencyEstimatorFrequencyDomain, [T], [float])
+GR_REGISTER_BLOCK("gr::filter::FrequencyEstimatorFrequencyDomainDecimating", gr::filter::FrequencyEstimatorFrequencyDomain, ([T], gr::Resampling<10U>), [float])
 
 template<typename T, typename... Args>
 requires std::floating_point<T>
@@ -382,7 +382,7 @@ template<typename T>
 inline constexpr bool is_derivative_v = is_derivative<T>::value;
 } // namespace detail
 
-GR_REGISTER_BLOCK("gr::filter::IQDemodulator", gr::filter::IQDemodulator, ([T], gr::Resampling<1024U, 1U, false>), [ float, double ])
+GR_REGISTER_BLOCK("gr::filter::IQDemodulator", gr::filter::IQDemodulator, ([T], gr::Resampling<1024U, 1U, false>), [float])
 
 template<typename T, typename... Args>
 requires std::floating_point<T>

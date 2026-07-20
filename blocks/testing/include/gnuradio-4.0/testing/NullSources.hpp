@@ -9,7 +9,7 @@
 
 namespace gr::testing {
 
-GR_REGISTER_BLOCK(gr::testing::NullSource, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::NullSource, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct NullSource : Block<NullSource<T>> {
@@ -32,7 +32,7 @@ Ideal for scenarios that require a simple, low-overhead source of consistent val
 
 static_assert(gr::BlockLike<NullSource<float>>);
 
-GR_REGISTER_BLOCK(gr::testing::ConstantSource, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::ConstantSource, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct ConstantSource : Block<ConstantSource<T>> {
@@ -62,7 +62,7 @@ Commonly used for testing and simulations where consistent output and finite exe
 
 static_assert(gr::BlockLike<ConstantSource<float>>);
 
-GR_REGISTER_BLOCK(gr::testing::SlowSource, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::SlowSource, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct SlowSource : Block<SlowSource<T>> {
@@ -91,7 +91,7 @@ struct SlowSource : Block<SlowSource<T>> {
     }
 };
 
-GR_REGISTER_BLOCK(gr::testing::CountingSource, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double> ])
+GR_REGISTER_BLOCK(gr::testing::CountingSource, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float> ])
 
 template<typename T>
 struct CountingSource : Block<CountingSource<T>> {
@@ -136,7 +136,7 @@ Commonly used for testing and simulations where consistent output and finite exe
     }
 };
 
-GR_REGISTER_BLOCK(gr::testing::Copy, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::Copy, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct Copy : Block<Copy<T>> {
@@ -154,7 +154,7 @@ Commonly used used to isolate parts of a flowgraph, manage buffer sizes, or simp
     }
 };
 
-GR_REGISTER_BLOCK(gr::testing::HeadBlock, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::HeadBlock, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct HeadBlock : Block<HeadBlock<T>> {
@@ -180,7 +180,7 @@ Commonly used to control data flow in systems where precise sample counts are cr
     }
 };
 
-GR_REGISTER_BLOCK(gr::testing::NullSink, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double>, gr::DataSet<uint16_t> ])
+GR_REGISTER_BLOCK(gr::testing::NullSink, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct NullSink : Block<NullSink<T>> {
@@ -195,7 +195,7 @@ Commonly used for testing, performance benchmarking, and in scenarios where sign
     void processOne(V) const noexcept { /* do nothing */ }
 };
 
-GR_REGISTER_BLOCK(gr::testing::CountingSink, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::CountingSink, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct CountingSink : Block<CountingSink<T>> {
@@ -224,7 +224,7 @@ Commonly used for testing scenarios and signal termination where output is unnec
     }
 };
 
-GR_REGISTER_BLOCK(gr::testing::SimCompute, [T], [ uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t, float, double, std::complex<float>, std::complex<double>, std::string, gr::Packet<float>, gr::Packet<double>, gr::Tensor<float>, gr::Tensor<double>, gr::DataSet<float>, gr::DataSet<double> ])
+GR_REGISTER_BLOCK(gr::testing::SimCompute, [T], [ uint8_t, int16_t, int32_t, float, std::complex<float>, gr::Packet<float>, gr::Tensor<float>, gr::DataSet<float> ])
 
 template<typename T>
 struct SimCompute : Block<SimCompute<T>> {

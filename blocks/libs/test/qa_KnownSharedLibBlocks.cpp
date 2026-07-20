@@ -46,7 +46,6 @@ const boost::ut::suite TagTests = [] {
 
         expect(registry.contains("gr::basic::ClockSource"sv));
         expect(registry.contains("gr::testing::Delay<float32>"sv));
-        expect(registry.contains("gr::testing::Delay<float64>"sv));
         expect(registry.contains("gr::testing::NullSource<float32>"sv));
         expect(registry.contains("gr::testing::NullSource<complex<float32>>"sv));
         expect(registry.contains("gr::testing::NullSource<gr::Packet<float32>>"sv));
@@ -81,9 +80,9 @@ const boost::ut::suite TagTests = [] {
         expect(registry.contains("gr::testing::NullSink<gr::DataSet<float32>>"sv));
         expect(registry.contains("gr::fileio::BasicFileSink<float32>"sv));
         expect(registry.contains("gr::basic::Convert<float32, float32>"sv));
-        expect(registry.contains("gr::basic::Convert<float32, float64>"sv));
+        expect(registry.contains("gr::basic::Convert<float32, int32>"sv));
         expect(registry.contains("gr::basic::ScalingConvert<float32, float32>"sv));
-        expect(registry.contains("gr::basic::ScalingConvert<float32, float64>"sv));
+        expect(registry.contains("gr::basic::ScalingConvert<float32, int32>"sv));
         expect(registry.contains("gr::basic::DataSink<float32>"sv));
         expect(registry.contains("gr::basic::SchmittTrigger<float32, (gr::trigger::InterpolationMethod)0>"sv));
 #if defined(_WIN32)

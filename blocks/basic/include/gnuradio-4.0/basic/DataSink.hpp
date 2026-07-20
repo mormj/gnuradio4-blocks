@@ -425,7 +425,7 @@ inline constexpr void checkTag([[maybe_unused]] const Tag& tag) {
 }
 } // namespace detail
 
-GR_REGISTER_BLOCK(gr::basic::DataSink, [T], [ float, double ])
+GR_REGISTER_BLOCK(gr::basic::DataSink, [T], [float])
 
 /**
  * @brief generic data sink for exporting streams to non-GR C++ APIs.
@@ -1034,7 +1034,7 @@ private:
     };
 };
 
-GR_REGISTER_BLOCK(gr::basic::DataSetSink, [T], [ float, double ])
+GR_REGISTER_BLOCK(gr::basic::DataSetSink, [T], [float])
 /**
  * @brief data sink for exporting data set streams to non-GR C++ APIs.
  *
