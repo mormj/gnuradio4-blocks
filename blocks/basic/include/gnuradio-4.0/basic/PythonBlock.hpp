@@ -106,8 +106,8 @@ myBlock.processBulk(ins, outs);
 
     std::vector<PortIn<T>>                                                        inputs{};
     std::vector<PortOut<T>>                                                       outputs{};
-    A<gr::Size_t, "n_inputs", Visible, Doc<"number of inputs">, Limits<0U, 32U>>  n_inputs     = 0U;
-    A<gr::Size_t, "n_outputs", Visible, Doc<"number of inputs">, Limits<0U, 32U>> n_outputs    = 0U;
+    A<gr::Size_t, "n_inputs", Visible, Doc<"number of inputs">, Limits<0U, 32U>, PortCountFor<"inputs">>  n_inputs     = 0U;
+    A<gr::Size_t, "n_outputs", Visible, Doc<"number of inputs">, Limits<0U, 32U>, PortCountFor<"outputs">> n_outputs    = 0U;
     std::string                                                                   pythonScript = "";
 
     A<property_map, "script_parameters", Doc<"keyword arguments of process_bulk, replaced whole by each change">> script_parameters{};

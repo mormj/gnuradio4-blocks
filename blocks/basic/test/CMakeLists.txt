@@ -6,6 +6,8 @@ endfunction()
 add_basic_test(qa_ClockSourceStop)
 add_basic_test(qa_Converter)
 add_basic_test(qa_Selector)
+add_basic_test(qa_PortCounts)
+target_link_libraries(qa_PortCounts PRIVATE gr-math)
 add_basic_test(qa_sources)
 add_basic_test(qa_DataSink)
 # the case ends at process exit, where a graph of static storage duration destroys its registered sinks

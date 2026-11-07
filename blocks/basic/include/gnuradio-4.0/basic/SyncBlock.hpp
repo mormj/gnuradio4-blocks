@@ -125,7 +125,7 @@ Note: We assume that desynchronization should not exceed the buffer size of the 
     std::vector<gr::PortOut<T>>           outputs = std::vector<gr::PortOut<T>>(1UZ);
 
     // settings
-    Annotated<gr::Size_t, "n_ports", gr::Visible, gr::Doc<"variable number of in/out ports">, gr::Limits<1U, 32U>> n_ports          = 1U;
+    Annotated<gr::Size_t, "n_ports", gr::Visible, gr::Doc<"variable number of in/out ports">, gr::Limits<1U, 32U>, gr::PortCountFor<"inputs", "outputs">> n_ports          = 1U;
     Annotated<gr::Size_t, "max_history_size", Doc<"Max size of history">>                                          max_history_size = 32000U; // should be less than actual buffer size (better < 80%)
     Annotated<std::string, "filter", Doc<"trigger name filter">>                                                   filter           = "";
     Annotated<std::uint64_t, "tolerance", Doc<"trigger time tolerance [ns]">>                                      tolerance        = 5ULL;

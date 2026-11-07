@@ -117,7 +117,7 @@ struct MathOpMultiPortImpl : Block<MathOpMultiPortImpl<T, op>, detail::MultiPort
     PortOut<T>             out;
 
     // settings
-    Annotated<gr::Size_t, "n_inputs", Visible, Doc<"Number of inputs">, Limits<1U, 32U>> n_inputs = 1U;
+    Annotated<gr::Size_t, "n_inputs", Visible, Doc<"Number of inputs">, Limits<1U, 32U>, PortCountFor<"in">> n_inputs = 1U;
 
     GR_MAKE_REFLECTABLE(MathOpMultiPortImpl, in, out, n_inputs);
 
